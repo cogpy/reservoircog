@@ -5,7 +5,7 @@ import os
 import tempfile
 import uuid
 
-from . import activationsfunc, hyper, mat_gen, nodes, observables, type
+from . import activationsfunc, cognitive, hyper, mat_gen, nodes, observables, type
 from ._version import __version__
 from .esn import ESN
 from .model import Model
@@ -27,6 +27,7 @@ __all__ = [
     "observables",
     "hyper",
     "nodes",
+    "cognitive",
     "Node",
     "Model",
     "set_seed",
