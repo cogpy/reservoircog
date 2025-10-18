@@ -78,8 +78,9 @@ class DistributedEchoNetwork:
             self.pattern_agent = PatternMatchAgent()
             self.agents['pattern_agent'] = self.pattern_agent
             
-        # Create remaining agents
+        # Create remaining agents with deterministic parameter variation
         agent_count = 0
+        np.random.seed(42)  # Ensure reproducible agent parameters
         for i in range(num_agents):
             agent_type = agent_types[i % len(agent_types)]
             
@@ -92,7 +93,7 @@ class DistributedEchoNetwork:
             agent = CognitiveAgent(
                 agent_name=agent_name,
                 specialty=agent_type,
-                units=150 + np.random.randint(-50, 50),  # Varied reservoir sizes
+                units=150 + int(np.random.randint(-50, 50)),  # Varied reservoir sizes
                 sr=0.9 + np.random.normal(0, 0.1),  # Varied spectral radius
                 lr=0.3 + np.random.normal(0, 0.05)  # Varied leak rates
             )
@@ -339,7 +340,8 @@ class CognitiveOrchestrator:
             final_response = response[-1] if len(response) > 0 else np.zeros(64)
             salience = np.mean(np.abs(final_response))
             
-            if salience > 0.5:  # Threshold for concept creation
+            CONCEPT_CREATION_THRESHOLD = 0.5
+            if salience > CONCEPT_CREATION_THRESHOLD:  # Threshold for concept creation
                 concept_name = f"percept_{agent_name}_{len(perception_concepts)}"
                 concept = self.add_concept(concept_name, truth_value=salience)
                 

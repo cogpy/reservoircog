@@ -136,16 +136,25 @@ class BaseAtomNode(Node):
             "attention": state["attention"]
         }
         
+    def _pad_or_truncate(self, data: np.ndarray, target_size: int) -> np.ndarray:
+        """Helper method to pad or truncate array to target size."""
+        if len(data) >= target_size:
+            return data[:target_size]
+        else:
+            padded = np.zeros(target_size)
+            padded[:len(data)] = data
+            return padded
+    
     def _encode_semantics(self, reservoir_out: np.ndarray, input_data: Timestep) -> np.ndarray:
         """Encode semantic content from reservoir dynamics."""
         # Default encoding: combine reservoir state with input
         if len(input_data) == 0:
             # Auto-regressive mode
-            encoding = reservoir_out[:self.output_dim] if len(reservoir_out) >= self.output_dim else np.pad(reservoir_out, (0, max(0, self.output_dim - len(reservoir_out))))
+            encoding = self._pad_or_truncate(reservoir_out, self.output_dim)
         else:
             # Combine input with reservoir dynamics
             combined = np.concatenate([input_data, reservoir_out])
-            encoding = combined[:self.output_dim] if len(combined) >= self.output_dim else np.pad(combined, (0, max(0, self.output_dim - len(combined))))
+            encoding = self._pad_or_truncate(combined, self.output_dim)
             
         return encoding
         
@@ -243,8 +252,8 @@ class PredicateNode(BaseAtomNode):
         if len(args) != self.arity:
             raise ValueError(f"Predicate {self.predicate_name} expects {self.arity} arguments, got {len(args)}")
             
-        # Encode arguments as input and get reservoir response
-        arg_encoding = np.concatenate([np.array([hash(str(arg)) % 1000 / 1000.0]) for arg in args])
+        # Encode arguments as input and get reservoir response - use deterministic encoding
+        arg_encoding = np.concatenate([np.array([abs(hash(str(arg) + str(i))) % 1000 / 1000.0]) for i, arg in enumerate(args)])
         
         # Ensure proper input dimension
         if not self.initialized:
