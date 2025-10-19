@@ -33,7 +33,8 @@ EXTRA_REQUIRES = {
     "hyper": ["hyperopt", "matplotlib>=2.2.0", "tqdm>=4.43.0"],
     "sklearn": ["scikit-learn (>=0.24.2, <1.7.0)"],
     "jax": ["jax==0.7.1"],
-    "all": ["hyperopt", "matplotlib>=2.2.0", "tqdm>=4.43.0", "scikit-learn>=0.24.2", "jax==0.7.1"],
+    "llm": ["cohere>=5.0.0", "llama-index>=0.10.0", "fastapi>=0.104.0", "uvicorn>=0.24.0"],
+    "all": ["hyperopt", "matplotlib>=2.2.0", "tqdm>=4.43.0", "scikit-learn>=0.24.2", "jax==0.7.1", "cohere>=5.0.0", "llama-index>=0.10.0", "fastapi>=0.104.0", "uvicorn>=0.24.0"],
 }
 
 PROJECT_URLS = {
