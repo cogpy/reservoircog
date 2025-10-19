@@ -105,11 +105,14 @@ class GraphRAGEngine:
         self.retriever = None
         self.query_engine = None
         
-        # Initialize from AtomSpace
-        asyncio.create_task(self._initialize_from_atomspace())
+        # Initialize from AtomSpace - will be called explicitly
+        self._initialized = False
     
-    async def _initialize_from_atomspace(self):
+    async def initialize(self):
         """Initialize GraphRAG from existing AtomSpace knowledge."""
+        if self._initialized:
+            return
+            
         logger.info("Initializing GraphRAG from AtomSpace...")
         
         # Convert atoms to GraphRAG nodes
@@ -124,6 +127,7 @@ class GraphRAGEngine:
         if self.use_llamaindex:
             await self._build_vector_index()
         
+        self._initialized = True
         logger.info(f"GraphRAG initialized with {len(self.nodes)} nodes and {len(self.edges)} edges")
     
     async def _add_atom_as_node(self, atom_id: str, atom: BaseAtomNode):

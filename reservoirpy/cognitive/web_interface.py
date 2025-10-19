@@ -117,13 +117,14 @@ class ReservoirPyWebInterface:
             redoc_url="/redoc"
         )
         
-        # Add CORS middleware
+        # Add CORS middleware - configure origins appropriately for production
+        cors_origins = kwargs.get('cors_origins', ["http://localhost:3000", "http://localhost:8000"])
         self.app.add_middleware(
             CORSMiddleware,
-            allow_origins=["*"],  # Configure appropriately for production
+            allow_origins=cors_origins,  # Restricted origins for security
             allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
+            allow_methods=["GET", "POST", "PUT", "DELETE"],
+            allow_headers=["Content-Type", "Authorization"],
         )
         
         # Setup routes

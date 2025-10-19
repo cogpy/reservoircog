@@ -138,6 +138,9 @@ class ReservoirPyChatEngine:
                 self.llm_interface
             )
             
+            # Explicitly initialize GraphRAG
+            await self.graphrag_engine.initialize()
+            
             logger.info("ReservoirPy Chat Engine initialized successfully")
             
         except Exception as e:
