@@ -12,3 +12,9 @@ scikit-learn (>=0.24.2, <1.7.0)
 
 # EXTRA : jax backend
 jax==0.7.1
+
+# EXTRA : LLM and GraphRAG inference engine
+cohere>=5.0.0
+llama-index>=0.10.0
+fastapi>=0.104.0
+uvicorn>=0.24.0
